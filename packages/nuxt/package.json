@@ -1,0 +1,55 @@
+{
+  "name": "@simpleanalytics/nuxt",
+  "version": "1.0.0",
+  "description": "Simple Analytics Nuxt",
+  "repository": "simpleanalytics/simpleanalytics-nuxt",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./types.d.ts",
+      "import": "./dist/module.mjs"
+    }
+  },
+  "main": "./dist/module.mjs",
+  "typesVersions": {
+    "*": {
+      ".": [
+        "./types.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "dist",
+    "types.d.ts"
+  ],
+  "scripts": {
+    "prepack": "nuxt-module-build build",
+    "build": "nuxt-module-build build",
+    "dev:playground": "npm run dev:prepare && nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest watch",
+    "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@nuxt/kit": "^3 || ^4"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "^2.6.2",
+    "@nuxt/eslint-config": "^1.6.0",
+    "@nuxt/module-builder": "^1.0.1",
+    "@nuxt/schema": "^3.0.0 || ^4.0.0",
+    "@nuxt/test-utils": "^3.19.2",
+    "@types/node": "latest",
+    "changelogen": "^0.6.2",
+    "eslint": "^9.31.0",
+    "nuxt": "^3 || ^4",
+    "typescript": "~5.8.3",
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.0.3"
+  }
+}

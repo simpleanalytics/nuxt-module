@@ -1,0 +1,17 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "env": ["SIMPLE_ANALYTICS_HOSTNAME", "NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "dev:prepare": {
+      "cache": false
+    }
+  }
+}
