@@ -1,23 +1,6 @@
 # Simple Analytics Nuxt Module
 
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![License][license-src]][license-href]
-[![Nuxt][nuxt-src]][nuxt-href]
-
 A Nuxt module for integrating Simple Analytics with server-side tracking capabilities.
-
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-- [🏀 Online playground](https://stackblitz.com/github/simpleanalytics/simpleanalytics-nuxt?file=playground%2Fapp.vue)
-
-## Features
-
-- 🚀 **Server-side tracking** - Track pageviews and events on the server
-- 🔒 **Privacy-focused** - Respects Do Not Track headers
-- 🎯 **UTM parameter tracking** - Automatic UTM parameter parsing
-- 🌍 **Proxy support** - Proxy Simple Analytics scripts through your domain
-- 📊 **Flexible configuration** - Customize tracking behavior
-- 🔧 **Auto-imports** - Functions automatically available in your app
 
 ## Quick Setup
 
@@ -54,7 +37,6 @@ if (import.meta.server) {
     hostname: 'your-domain.com',
     metadata: {
       source: 'homepage',
-      timestamp: new Date().toISOString()
     }
   })
 }
@@ -69,7 +51,7 @@ Track custom events from API routes or server-side code:
 // In a server API route
 export default defineEventHandler(async (event) => {
   await trackEvent('user_signup', {
-    headers: event.headers,
+    event,
     metadata: {
       source: 'registration_form',
       user_type: 'new'
@@ -79,32 +61,6 @@ export default defineEventHandler(async (event) => {
   return { success: true }
 })
 ```
-
-### Client-side Event Tracking
-
-Track events from the client side:
-
-```vue
-<script setup>
-const handleButtonClick = async () => {
-  try {
-    await $fetch('/api/track-event', {
-      method: 'POST',
-      body: {
-        eventName: 'button_clicked',
-        metadata: {
-          button_id: 'cta_button',
-          page: 'homepage'
-        }
-      }
-    })
-  } catch (error) {
-    console.error('Failed to track event:', error)
-  }
-}
-</script>
-```
-
 ## Configuration
 
 ### Module Options
@@ -164,9 +120,6 @@ export default defineNuxtConfig({
 ```bash
 # Required: Your Simple Analytics hostname
 SIMPLE_ANALYTICS_HOSTNAME=your-domain.com
-
-# Optional: Enable analytics in development
-ENABLE_ANALYTICS_IN_DEV=1
 ```
 
 ## API Reference
@@ -195,37 +148,6 @@ Track a custom event on the server.
   - `metadata` (object): Additional metadata to track
   - `ignoreMetrics` (object): Metrics to ignore for this event
   - `collectDnt` (boolean): Whether to collect data when DNT is enabled
-
-## Development
-
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Build the playground
-  npm run dev:build
-  
-  # Run ESLint
-  npm run lint
-  
-  # Run Vitest
-  npm run test
-  npm run test:watch
-  
-  # Release new version
-  npm run release
-  ```
-
-</details>
 
 ## License
 
