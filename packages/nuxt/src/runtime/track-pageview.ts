@@ -28,7 +28,7 @@ export async function trackPageview(options?: TrackingOptions) {
 
   const event = useRequestEvent();
 
-    // We don't record non-GET requests
+  // We don't record non-GET requests
   if (!event || event.method !== "GET") {
     return;
   }
@@ -80,9 +80,9 @@ export async function trackPageview(options?: TrackingOptions) {
     try {
       console.error(
         `Failed to track pageview: ${response.status}`,
-        await response.json(),
+        await response.json()
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error(`Failed to track pageview: ${response.status}`);
     }

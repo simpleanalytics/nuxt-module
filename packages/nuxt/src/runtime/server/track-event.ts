@@ -1,28 +1,19 @@
-import type {
-  AnalyticsEvent,
-  TrackingOptions,
-  HeaderOnlyContext,
-  ServerContext,
-} from "./lib/interfaces";
+import type { AnalyticsEvent, TrackingOptions } from "./lib/interfaces";
 import {
   isProduction,
   isDoNotTrackEnabled,
   isEnhancedBotDetectionEnabled,
 } from "./lib/utils";
 import { parseHeaders } from "./lib/headers";
-import { useRequestEvent } from "nuxt/app";
+import { useRequestEvent, useRuntimeConfig } from "nuxt/app";
 
-type TrackEventOptions = TrackingOptions & (ServerContext | HeaderOnlyContext);
-
-export async function trackEvent(
-  eventName: string,
-  options?: TrackEventOptions,
-) {
+export async function trackEvent(eventName: string, options?: TrackingOptions) {
   if (!isProduction()) {
     return;
   }
 
-  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname =
+    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
@@ -64,9 +55,9 @@ export async function trackEvent(
     try {
       console.error(
         `Failed to track event: ${response.status}`,
-        await response.json(),
+        await response.json()
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error(`Failed to track event: ${response.status}`);
     }

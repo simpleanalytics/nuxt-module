@@ -1,6 +1,6 @@
 export {};
 
-declare module '@nuxt/schema' {
+declare module "@nuxt/schema" {
   interface RuntimeConfig {
     // Private runtime config (server-side only)
   }
@@ -28,25 +28,25 @@ declare module '@nuxt/schema' {
       strictUtm?: boolean;
       enabled?: boolean;
       proxy?: boolean;
-    }
+    };
   }
 }
 
-declare module '#app' {
+declare module "#app" {
   interface NuxtApp {
     $simpleAnalytics: {
-      trackEvent: typeof import('./src/lib/server/simple-analytics').trackEvent;
-      trackPageview: typeof import('./src/lib/server/simple-analytics').trackPageview;
-    }
+      trackEvent: typeof import("./src/lib/server/simple-analytics").trackEvent;
+      trackPageview: typeof import("./src/lib/server/simple-analytics").trackPageview;
+    };
   }
 }
 
-declare module '@vue/runtime-core' {
+declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $simpleAnalytics: {
-      trackEvent: typeof import('./src/lib/server/simple-analytics').trackEvent;
-      trackPageview: typeof import('./src/lib/server/simple-analytics').trackPageview;
-    }
+      trackEvent: typeof import("./src/lib/server/simple-analytics").trackEvent;
+      trackPageview: typeof import("./src/lib/server/simple-analytics").trackPageview;
+    };
   }
 }
 
@@ -54,11 +54,11 @@ declare global {
   interface Window {
     sa_event?(
       s: string,
-      params?: Record<string, string | boolean | number | Date>,
+      params?: Record<string, string | boolean | number | Date>
     ): void;
     sa_pageview?(
       s: string,
-      params?: Record<string, string | boolean | number | Date>,
+      params?: Record<string, string | boolean | number | Date>
     ): void;
   }
 }

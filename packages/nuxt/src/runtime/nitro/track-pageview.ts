@@ -10,13 +10,14 @@ import {
 import { parseHeaders } from "../server/lib/headers";
 import { parseUtmParameters } from "../server/lib/utm";
 import type { H3Event } from "h3";
+import { useRuntimeConfig } from "#imports";
 
 // eslint-disable-next-line regexp/no-unused-capturing-group
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 
 type NitroContext = {
   event: H3Event;
-}
+};
 
 type TrackPageviewOptions = TrackingOptions & NitroContext;
 
@@ -25,7 +26,8 @@ export async function trackPageview(options: TrackPageviewOptions) {
     return;
   }
 
-  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname =
+    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
@@ -34,7 +36,7 @@ export async function trackPageview(options: TrackPageviewOptions) {
 
   const event = options.event;
 
-    // We don't record non-GET requests
+  // We don't record non-GET requests
   if (!event || event.method !== "GET") {
     return;
   }
@@ -86,9 +88,9 @@ export async function trackPageview(options: TrackPageviewOptions) {
     try {
       console.error(
         `Failed to track pageview: ${response.status}`,
-        await response.json(),
+        await response.json()
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error(`Failed to track pageview: ${response.status}`);
     }

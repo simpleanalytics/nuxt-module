@@ -12,6 +12,9 @@
     },
     "dev:prepare": {
       "cache": false
+    },
+    "postinstall": {
+      "cache": false
     }
   }
 }

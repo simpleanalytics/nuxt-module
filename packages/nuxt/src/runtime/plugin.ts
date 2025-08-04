@@ -1,6 +1,4 @@
-import { defineNuxtPlugin } from '#app'
+import { defineNuxtPlugin } from "#app";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default defineNuxtPlugin((nuxtApp) => {
-
-})
+export default defineNuxtPlugin((nuxtApp) => {});

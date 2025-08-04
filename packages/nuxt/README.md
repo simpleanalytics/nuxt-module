@@ -14,13 +14,13 @@ Add the module to your `nuxt.config.ts`:
 
 ```ts
 export default defineNuxtConfig({
-  modules: ['@simpleanalytics/nuxt'],
+  modules: ["@simpleanalytics/nuxt"],
   simpleAnalytics: {
-    hostname: 'your-domain.com',
+    hostname: "your-domain.com",
     enabled: true,
-    proxy: true
-  }
-})
+    proxy: true,
+  },
+});
 ```
 
 ## Usage
@@ -34,11 +34,11 @@ Track pageviews automatically on the server:
 // This will run on the server and track the pageview
 if (import.meta.server) {
   await trackPageview({
-    hostname: 'your-domain.com',
+    hostname: "your-domain.com",
     metadata: {
-      source: 'homepage',
-    }
-  })
+      source: "homepage",
+    },
+  });
 }
 </script>
 ```
@@ -50,17 +50,18 @@ Track custom events from API routes or server-side code:
 ```ts
 // In a server API route
 export default defineEventHandler(async (event) => {
-  await trackEvent('user_signup', {
+  await trackEvent("user_signup", {
     event,
     metadata: {
-      source: 'registration_form',
-      user_type: 'new'
-    }
-  })
-  
-  return { success: true }
-})
+      source: "registration_form",
+      user_type: "new",
+    },
+  });
+
+  return { success: true };
+});
 ```
+
 ## Configuration
 
 ### Module Options
@@ -69,23 +70,23 @@ export default defineEventHandler(async (event) => {
 export default defineNuxtConfig({
   simpleAnalytics: {
     // Your Simple Analytics hostname
-    hostname: 'your-domain.com',
-    
+    hostname: "your-domain.com",
+
     // Enable/disable the module
     enabled: true,
-    
+
     // Enable/disable proxy
     proxy: true,
-    
+
     // Auto-collect events
     autoCollect: true,
-    
+
     // Collect data even when DNT is enabled
     collectDnt: false,
-    
+
     // Dashboard mode
-    mode: 'dash',
-    
+    mode: "dash",
+
     // Ignore specific metrics
     ignoreMetrics: {
       referrer: false,
@@ -97,22 +98,22 @@ export default defineNuxtConfig({
       useragent: false,
       screensize: false,
       viewportsize: false,
-      language: false
+      language: false,
     },
-    
+
     // Ignore specific pages
-    ignorePages: ['/admin', '/private'],
-    
+    ignorePages: ["/admin", "/private"],
+
     // Allow specific URL parameters
-    allowParams: ['ref', 'source'],
-    
+    allowParams: ["ref", "source"],
+
     // Non-unique parameters
-    nonUniqueParams: ['utm_source'],
-    
+    nonUniqueParams: ["utm_source"],
+
     // Strict UTM parameter parsing
-    strictUtm: true
-  }
-})
+    strictUtm: true,
+  },
+});
 ```
 
 ### Environment Variables
@@ -129,6 +130,7 @@ SIMPLE_ANALYTICS_HOSTNAME=your-domain.com
 Track a pageview on the server.
 
 **Parameters:**
+
 - `options` (object):
   - `hostname` (string): Your Simple Analytics hostname
   - `metadata` (object): Additional metadata to track
@@ -141,6 +143,7 @@ Track a pageview on the server.
 Track a custom event on the server.
 
 **Parameters:**
+
 - `eventName` (string): Name of the event to track
 - `options` (object):
   - `headers` (Headers): Request headers
@@ -154,14 +157,12 @@ Track a custom event on the server.
 MIT License - see the [LICENSE](LICENSE) file for details.
 
 <!-- Badges -->
+
 [npm-version-src]: https://img.shields.io/npm/v/@simpleanalytics/nuxt/latest.svg?style=flat&colorA=020420&colorB=00DC82
 [npm-version-href]: https://npmjs.com/package/@simpleanalytics/nuxt
-
 [npm-downloads-src]: https://img.shields.io/npm/dm/@simpleanalytics/nuxt.svg?style=flat&colorA=020420&colorB=00DC82
 [npm-downloads-href]: https://npm.chart.dev/@simpleanalytics/nuxt
-
 [license-src]: https://img.shields.io/npm/l/@simpleanalytics/nuxt.svg?style=flat&colorA=020420&colorB=00DC82
 [license-href]: https://npmjs.com/package/@simpleanalytics/nuxt
-
 [nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
 [nuxt-href]: https://nuxt.com

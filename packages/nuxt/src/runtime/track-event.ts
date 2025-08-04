@@ -16,7 +16,7 @@ type TrackEventOptions = TrackingOptions & (ServerContext | HeaderOnlyContext);
 
 export async function trackEvent(
   eventName: string,
-  options?: TrackEventOptions,
+  options?: TrackEventOptions
 ) {
   if (!isProduction()) {
     return;
@@ -64,9 +64,9 @@ export async function trackEvent(
     try {
       console.error(
         `Failed to track event: ${response.status}`,
-        await response.json(),
+        await response.json()
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error(`Failed to track event: ${response.status}`);
     }

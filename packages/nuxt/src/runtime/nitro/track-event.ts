@@ -1,7 +1,4 @@
-import type {
-  AnalyticsEvent,
-  TrackingOptions,
-} from "../server/lib/interfaces";
+import type { AnalyticsEvent, TrackingOptions } from "../server/lib/interfaces";
 import {
   isProduction,
   isDoNotTrackEnabled,
@@ -9,22 +6,24 @@ import {
 } from "../server/lib/utils";
 import { parseHeaders } from "../server/lib/headers";
 import type { H3Event } from "h3";
+import { useRuntimeConfig } from "#imports";
 
 type NitroContext = {
   event: H3Event;
-}
+};
 
 type TrackEventOptions = TrackingOptions & NitroContext;
 
 export async function trackEvent(
   eventName: string,
-  options: TrackEventOptions,
+  options: TrackEventOptions
 ) {
   if (!isProduction()) {
     return;
   }
 
-  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname =
+    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
@@ -66,9 +65,9 @@ export async function trackEvent(
     try {
       console.error(
         `Failed to track event: ${response.status}`,
-        await response.json(),
+        await response.json()
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error(`Failed to track event: ${response.status}`);
     }

@@ -1,13 +1,14 @@
 /* globals document */
-import type { App, Plugin, InjectionKey } from 'vue'
+import type { App, Plugin, InjectionKey } from "vue";
 
-export const saEventKey: InjectionKey<(event: string) => void> = Symbol('saEvent');
+export const saEventKey: InjectionKey<(event: string) => void> =
+  Symbol("saEvent");
 
 declare global {
   interface Window {
     sa_event?(
       s: string,
-      params?: Record<string, string | boolean | number | Date>,
+      params?: Record<string, string | boolean | number | Date>
     ): void;
   }
 }
@@ -19,7 +20,10 @@ export interface SimpleAnalyticsOptions {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isPromise = (subject: any): subject is Promise<boolean> =>
-  subject && typeof subject === 'object' && 'then' in subject && typeof (subject as { then: unknown }).then === "function";
+  subject &&
+  typeof subject === "object" &&
+  "then" in subject &&
+  typeof (subject as { then: unknown }).then === "function";
 
 const warn = (message: string): void => {
   if (console && console.warn)
@@ -54,13 +58,19 @@ const injectScript = (app: App, domain: string): void => {
 const handleSkipOrLocalhost = (app: App): void => {
   // when skip===true or script is running on localhost
   // we need a function that logs events that would have been sent
-  app.provide("saEvent", function(event: string) {
+  app.provide("saEvent", function (event: string) {
     warn(`${event} event captured but not sent due to skip or localhost`);
   });
 };
 
 const SimpleAnalytics: Plugin = {
-  install(app: App, { skip = false, domain = "scripts.simpleanalyticscdn.com" }: SimpleAnalyticsOptions = {}) {
+  install(
+    app: App,
+    {
+      skip = false,
+      domain = "scripts.simpleanalyticscdn.com",
+    }: SimpleAnalyticsOptions = {}
+  ) {
     if (skip === false) return injectScript(app, domain);
 
     // If skip is promise, resolve first. With failure always inject script

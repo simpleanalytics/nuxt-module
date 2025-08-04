@@ -1,7 +1,4 @@
-import type {
-  AnalyticsPageview,
-  TrackingOptions,
-} from "./lib/interfaces";
+import type { AnalyticsPageview, TrackingOptions } from "./lib/interfaces";
 import {
   isProduction,
   isDoNotTrackEnabled,
@@ -9,18 +6,18 @@ import {
 } from "./lib/utils";
 import { parseHeaders } from "./lib/headers";
 import { parseUtmParameters } from "./lib/utm";
-import { useRequestEvent, useRoute } from "nuxt/app";
+import { useRequestEvent, useRoute, useRuntimeConfig } from "nuxt/app";
 
 // eslint-disable-next-line regexp/no-unused-capturing-group
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 
 export async function trackPageview(options?: TrackingOptions) {
-  console.log('trackPageview', isProduction());
   if (!isProduction()) {
     return;
   }
 
-  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname =
+    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
@@ -29,7 +26,7 @@ export async function trackPageview(options?: TrackingOptions) {
 
   const event = useRequestEvent();
 
-    // We don't record non-GET requests
+  // We don't record non-GET requests
   if (!event || event.method !== "GET") {
     return;
   }
@@ -81,9 +78,9 @@ export async function trackPageview(options?: TrackingOptions) {
     try {
       console.error(
         `Failed to track pageview: ${response.status}`,
-        await response.json(),
+        await response.json()
       );
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       console.error(`Failed to track pageview: ${response.status}`);
     }

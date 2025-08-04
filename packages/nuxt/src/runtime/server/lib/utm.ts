@@ -28,7 +28,7 @@ interface UtmParameters {
 
 export function parseUtmParameters(
   searchParams: LocationQuery,
-  options: UtmOptions,
+  options: UtmOptions
 ) {
   const params: UtmParameters = {};
 
@@ -49,7 +49,9 @@ export function parseUtmParameters(
     const param = parseUtmParameter(name, options.strictUtm);
 
     if (param) {
-      params[param] = Array.isArray(value) ? (value[0] ?? undefined) : (value ?? undefined);
+      params[param] = Array.isArray(value)
+        ? value[0] ?? undefined
+        : value ?? undefined;
     }
   }
 

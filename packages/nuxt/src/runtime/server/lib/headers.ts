@@ -40,7 +40,7 @@ export function parseUserAgent(headers: Headers) {
 
 export function parseHeaders(
   headers: Headers,
-  ignoredMetrics: IgnoredMetrics = {},
+  ignoredMetrics: IgnoredMetrics = {}
 ) {
   return {
     ua: !ignoredMetrics.userAgent ? parseUserAgent(headers) : "",
