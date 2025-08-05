@@ -4,6 +4,7 @@ import {
   addServerHandler,
   addImports,
   addServerImports,
+  addPlugin,
 } from "@nuxt/kit";
 import type { SimpleAnalyticsOptions } from "./runtime/server/lib/options";
 
@@ -35,7 +36,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.runtimeConfig.public.simpleAnalytics = configOptions;
 
-    // addPlugin(resolver.resolve('./runtime/plugin'))
+    addPlugin(resolver.resolve("./runtime/plugin"));
 
     addImports([
       {

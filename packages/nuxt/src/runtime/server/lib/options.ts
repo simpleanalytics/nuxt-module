@@ -1,6 +1,7 @@
 export interface SimpleAnalyticsOptions {
   autoCollect?: boolean;
   collectDnt?: boolean;
+  domain?: string;
   hostname?: string;
   mode?: "dash";
   ignoreMetrics?: {

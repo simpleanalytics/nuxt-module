@@ -1,4 +1,13 @@
-import { defineNuxtPlugin } from "#app";
+import { useRuntimeConfig } from "#imports";
+import { defineNuxtPlugin } from "nuxt/app";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default defineNuxtPlugin((nuxtApp) => {});
+import SimpleAnalytics from "simple-analytics-vue";
+
+export default defineNuxtPlugin((nuxtApp) => {
+  const config = useRuntimeConfig();
+
+  nuxtApp.vueApp.use(SimpleAnalytics, {
+    skip: !config.public.simpleAnalytics.enabled,
+    domain: config.public.simpleAnalytics.domain,
+  });
+});

@@ -8,6 +8,7 @@ declare module "@nuxt/schema" {
     simpleAnalytics: {
       autoCollect?: boolean;
       collectDnt?: boolean;
+      domain?: string;
       hostname?: string;
       mode?: "dash";
       ignoreMetrics?: {

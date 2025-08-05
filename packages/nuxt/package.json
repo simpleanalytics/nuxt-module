@@ -36,7 +36,8 @@
     "test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit"
   },
   "dependencies": {
-    "@nuxt/kit": "^4.0.2"
+    "@nuxt/kit": "^4.0.2",
+    "simple-analytics-vue": "^3.0.3"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.6.2",
@@ -47,7 +48,7 @@
     "@types/node": "^24.2.0",
     "changelogen": "^0.6.2",
     "eslint": "^9.32.0",
-    "nuxt": "^3 || ^4",
+    "nuxt": "^4",
     "typescript": "~5.9.2",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.5"
