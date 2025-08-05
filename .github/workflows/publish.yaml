@@ -40,11 +40,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Prepare playground
+        run: pnpm dev:prepare
+
       - name: Build package
-        run: pnpm build --filter=@simpleanalytics/next
+        run: pnpm build --filter=@simpleanalytics/nuxt
 
       - name: Publish package
         shell: bash
-        run: pnpm publish --filter=@simpleanalytics/next --access public --no-git-checks
+        run: pnpm publish --filter=@simpleanalytics/nuxt --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
