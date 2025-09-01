@@ -6,6 +6,7 @@
     "build:package": "turbo run build --filter=@simpleanalytics/nuxt",
     "postinstall": "turbo run postinstall",
     "dev:prepare": "turbo run dev:prepare --filter=@simpleanalytics/nuxt",
+    "pack:package": "pnpm pack --filter=@simpleanalytics/nuxt",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
@@ -13,5 +14,5 @@
     "@changesets/cli": "^2.29.5",
     "turbo": "^2.5.5"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@10.15.1"
 }

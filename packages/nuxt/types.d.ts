@@ -1,6 +1,7 @@
 export {};
 
 declare module "@nuxt/schema" {
+  // eslint-disable-next-line @typescript-eslint/no-empty-object-type
   interface RuntimeConfig {
     // Private runtime config (server-side only)
   }
@@ -92,5 +93,11 @@ declare global {
       s: string,
       params?: Record<string, string | boolean | number | Date>
     ): void;
+  }
+}
+
+declare module "@vue/runtime-core" {
+  interface InjectionKeys {
+    saEvent: (event: string) => void;
   }
 }
