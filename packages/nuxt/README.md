@@ -1,54 +1,81 @@
-# Simple Analytics Nuxt Module
+# Simple Analytics for Nuxt
 
-A Nuxt module for integrating Simple Analytics with server-side tracking capabilities.
+This Nuxt module provides a simple way to add privacy-friendly pageview and event tracking using Simple Analytics to your Nuxt 3 or 4 application.
 
-## Quick Setup
-
-Install the module to your Nuxt application:
+## Installation
 
 ```bash
-npm install @simpleanalytics/nuxt
+npm i @simpleanalytics/nuxt
 ```
 
-Add the module to your `nuxt.config.ts`:
+## Environment Variables
+
+Set your website domain (as added in your [Simple Analytics dashboard](https://dashboard.simpleanalytics.com/)):
+
+```txt
+SIMPLE_ANALYTICS_HOSTNAME=example.com
+```
+
+## Configuration
+
+Add the module to your `nuxt.config.ts` and optionally set your hostname:
 
 ```ts
+// nuxt.config.ts
 export default defineNuxtConfig({
+  // ...
   modules: ["@simpleanalytics/nuxt"],
   simpleAnalytics: {
-    hostname: "your-domain.com",
-    enabled: true,
-    proxy: true,
+    hostname: "example.com", // optional, if you don't use SIMPLE_ANALYTICS_HOSTNAME
   },
 });
 ```
 
 ## Usage
 
-### Server-side Pageview Tracking
+### Client-side analytics
 
-Track pageviews automatically on the server:
+The module uses the `simple-analytics-vue` plugin to auto-inject the Simple Analytics script.
+
+### Tracking events in client components
+
+To track events programmatically, inject the `saEvent` function.
 
 ```vue
 <script setup>
-// This will run on the server and track the pageview
+import { inject } from "vue";
+
+const saEvent = inject("saEvent");
+
+// e.g.: send event when liking a comment
+const likeComment = (comment) => {
+  saEvent(`comment_like_${comment.id}`);
+};
+</script>
+```
+
+### Server-side tracking (SSR & API)
+
+Track page views or events during server side rendering or in API routes:
+
+#### In server-rendered pages
+
+```vue
+<script setup lang="ts">
 if (import.meta.server) {
   await trackPageview({
-    hostname: "your-domain.com",
     metadata: {
-      source: "homepage",
+      source: "some extra context",
     },
   });
 }
 </script>
 ```
 
-### Server-side Event Tracking
-
-Track custom events from API routes or server-side code:
+#### In Nitro API routes
 
 ```ts
-// In a server API route
+// server/api/signup.post.ts
 export default defineEventHandler(async (event) => {
   await trackEvent("user_signup", {
     event,
@@ -58,69 +85,8 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return { success: true };
+  // ...
 });
-```
-
-## Configuration
-
-### Module Options
-
-```ts
-export default defineNuxtConfig({
-  simpleAnalytics: {
-    // Your Simple Analytics hostname
-    hostname: "your-domain.com",
-
-    // Enable/disable the module
-    enabled: true,
-
-    // Enable/disable proxy
-    proxy: true,
-
-    // Auto-collect events
-    autoCollect: true,
-
-    // Collect data even when DNT is enabled
-    collectDnt: false,
-
-    // Dashboard mode
-    mode: "dash",
-
-    // Ignore specific metrics
-    ignoreMetrics: {
-      referrer: false,
-      utm: false,
-      country: false,
-      session: false,
-      timeonpage: false,
-      scrolled: false,
-      useragent: false,
-      screensize: false,
-      viewportsize: false,
-      language: false,
-    },
-
-    // Ignore specific pages
-    ignorePages: ["/admin", "/private"],
-
-    // Allow specific URL parameters
-    allowParams: ["ref", "source"],
-
-    // Non-unique parameters
-    nonUniqueParams: ["utm_source"],
-
-    // Strict UTM parameter parsing
-    strictUtm: true,
-  },
-});
-```
-
-### Environment Variables
-
-```bash
-# Required: Your Simple Analytics hostname
-SIMPLE_ANALYTICS_HOSTNAME=your-domain.com
 ```
 
 ## API Reference
@@ -151,18 +117,3 @@ Track a custom event on the server.
   - `metadata` (object): Additional metadata to track
   - `ignoreMetrics` (object): Metrics to ignore for this event
   - `collectDnt` (boolean): Whether to collect data when DNT is enabled
-
-## License
-
-MIT License - see the [LICENSE](LICENSE) file for details.
-
-<!-- Badges -->
-
-[npm-version-src]: https://img.shields.io/npm/v/@simpleanalytics/nuxt/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/@simpleanalytics/nuxt
-[npm-downloads-src]: https://img.shields.io/npm/dm/@simpleanalytics/nuxt.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npm.chart.dev/@simpleanalytics/nuxt
-[license-src]: https://img.shields.io/npm/l/@simpleanalytics/nuxt.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/@simpleanalytics/nuxt
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
-[nuxt-href]: https://nuxt.com
