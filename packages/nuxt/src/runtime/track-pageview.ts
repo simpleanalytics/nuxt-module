@@ -9,7 +9,7 @@ import {
 } from "./server/lib/utils";
 import { parseHeaders } from "./server/lib/headers";
 import { parseUtmParameters } from "./server/lib/utm";
-import { useRequestEvent, useRoute } from "nuxt/app";
+import { useRequestEvent, useRoute, useRuntimeConfig } from "nuxt/app";
 
 // eslint-disable-next-line regexp/no-unused-capturing-group
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
@@ -19,7 +19,8 @@ export async function trackPageview(options?: TrackingOptions) {
     return;
   }
 
-  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname =
+    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");

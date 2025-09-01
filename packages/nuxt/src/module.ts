@@ -31,6 +31,7 @@ export default defineNuxtModule<ModuleOptions>({
     // Ensure proxy has a default value if not provided
     const configOptions = {
       ...options,
+      hostname: options.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME,
       proxy: options.proxy ?? true,
     };
 

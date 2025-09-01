@@ -10,7 +10,7 @@ import {
   isEnhancedBotDetectionEnabled,
 } from "./server/lib/utils";
 import { parseHeaders } from "./server/lib/headers";
-import { useRequestEvent } from "nuxt/app";
+import { useRequestEvent, useRuntimeConfig } from "nuxt/app";
 
 type TrackEventOptions = TrackingOptions & (ServerContext | HeaderOnlyContext);
 
@@ -22,7 +22,8 @@ export async function trackEvent(
     return;
   }
 
-  const hostname = options?.hostname ?? process.env.SIMPLE_ANALYTICS_HOSTNAME;
+  const hostname =
+    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");

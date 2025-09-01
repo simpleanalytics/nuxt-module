@@ -1,3 +1,5 @@
+import { useRuntimeConfig } from "#imports";
+
 export interface SimpleAnalyticsOptions {
   autoCollect?: boolean;
   collectDnt?: boolean;
@@ -34,7 +36,7 @@ export function parseOptions(options: SimpleAnalyticsOptions) {
     "data-auto-collect": options.autoCollect,
     "data-collect-dnt": options.collectDnt,
     "data-hostname":
-      options.hostname ?? process.env.NEXT_PUBLIC_SIMPLE_ANALYTICS_HOSTNAME,
+      options.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname,
     "data-mode": options.mode,
     "data-ignore-metrics": metrics === "" ? undefined : metrics,
     "data-ignore-pages": options.ignorePages?.join(","),
