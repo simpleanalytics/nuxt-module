@@ -9,15 +9,11 @@ import {
 } from "../server/lib/utils";
 import { parseHeaders } from "../server/lib/headers";
 import { parseUtmParameters } from "../server/lib/utm";
-import type { H3Event } from "h3";
 import { useRuntimeConfig } from "#imports";
+import type { NitroContext } from "./interface";
 
 // eslint-disable-next-line regexp/no-unused-capturing-group
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
-
-type NitroContext = {
-  event: H3Event;
-};
 
 type TrackPageviewOptions = TrackingOptions & NitroContext;
 
@@ -34,16 +30,13 @@ export async function trackPageview(options: TrackPageviewOptions) {
     return;
   }
 
-  const event = options.event;
-
   // We don't record non-GET requests
-  if (!event || event.method !== "GET") {
+  if (options.event.method !== "GET") {
     return;
   }
 
-  const { path, query } = event.context.route;
-  const searchParams = query;
-  const headers = event.headers;
+  const { headers } = options.event;
+  const { path, query } = options.event.context.route;
 
   // We don't record non-navigation requests
   if (headers.get("Sec-Fetch-Mode") !== "navigate") {
@@ -64,8 +57,8 @@ export async function trackPageview(options: TrackPageviewOptions) {
     event: "pageview",
     path,
     ...parseHeaders(headers, options?.ignoreMetrics),
-    ...(searchParams && !options?.ignoreMetrics?.utm
-      ? parseUtmParameters(searchParams, {
+    ...(query && !options?.ignoreMetrics?.utm
+      ? parseUtmParameters(query, {
           strictUtm: options?.strictUtm ?? true,
         })
       : {}),

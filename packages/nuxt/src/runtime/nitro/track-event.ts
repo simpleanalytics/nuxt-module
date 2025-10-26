@@ -5,12 +5,8 @@ import {
   isEnhancedBotDetectionEnabled,
 } from "../server/lib/utils";
 import { parseHeaders } from "../server/lib/headers";
-import type { H3Event } from "h3";
 import { useRuntimeConfig } from "#imports";
-
-type NitroContext = {
-  event: H3Event;
-};
+import type { NitroContext } from "./interface";
 
 type TrackEventOptions = TrackingOptions & NitroContext;
 
@@ -30,11 +26,7 @@ export async function trackEvent(
     return;
   }
 
-  const headers = options.event.headers;
-
-  if (!headers) {
-    return;
-  }
+  const { headers } = options.event;
 
   if (isDoNotTrackEnabled(headers) && !options?.collectDnt) {
     return;
