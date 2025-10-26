@@ -2,11 +2,8 @@ import { defineEventHandler, createError } from "h3";
 
 export default defineEventHandler(async (event) => {
   try {
-    await trackEvent("button_clicked", {
-      event,
-      metadata: {
-        source: "test_page",
-      },
+    await trackEvent(event, "button_clicked", {
+      external_id: "1234",
     });
 
     return {

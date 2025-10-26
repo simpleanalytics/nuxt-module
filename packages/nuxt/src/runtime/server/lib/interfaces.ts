@@ -39,12 +39,3 @@ export interface IgnoredMetrics {
   viewportSize?: boolean | undefined;
   language?: boolean | undefined;
 }
-
-export interface TrackingOptions {
-  hostname?: string | undefined;
-  enhancedBotDetection?: boolean | undefined;
-  strictUtm?: boolean | undefined;
-  ignoreMetrics?: IgnoredMetrics | undefined;
-  collectDnt?: boolean | undefined;
-  metadata?: AnalyticsMetadata;
-}

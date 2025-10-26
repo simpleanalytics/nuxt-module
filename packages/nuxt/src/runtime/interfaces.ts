@@ -19,9 +19,15 @@ export interface SimpleAnalyticsOptions {
     screensize?: boolean;
     viewportsize?: boolean;
     language?: boolean;
+    // server-side only
+    timezone?: boolean;
   };
   ignorePages?: string[];
   allowParams?: string[];
   nonUniqueParams?: string[];
   strictUtm?: boolean;
+  // server-side only
+  enhancedBotDetection?: boolean;
 }
+
+export type IgnoredMetrics = SimpleAnalyticsOptions['ignoreMetrics'];

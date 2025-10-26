@@ -1,29 +1,25 @@
 import type {
   AnalyticsPageview,
-  TrackingOptions,
 } from "../server/lib/interfaces";
 import {
   isProduction,
   isDoNotTrackEnabled,
-  isEnhancedBotDetectionEnabled,
 } from "../server/lib/utils";
 import { parseHeaders } from "../server/lib/headers";
 import { parseUtmParameters } from "../server/lib/utm";
 import { useRuntimeConfig } from "#imports";
-import type { NitroContext } from "./interface";
+import type { H3Event } from "h3";
 
 // eslint-disable-next-line regexp/no-unused-capturing-group
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 
-type TrackPageviewOptions = TrackingOptions & NitroContext;
-
-export async function trackPageview(options: TrackPageviewOptions) {
+export async function trackPageview(event: H3Event, metadata?: Record<string, string | boolean | number | Date>) {
   if (!isProduction()) {
     return;
   }
 
-  const hostname =
-    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
+  const config = useRuntimeConfig().public.simpleAnalytics;
+  const hostname = config.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
@@ -31,19 +27,18 @@ export async function trackPageview(options: TrackPageviewOptions) {
   }
 
   // We don't record non-GET requests
-  if (options.event.method !== "GET") {
+  if (event.method !== "GET") {
     return;
   }
 
-  const { headers } = options.event;
-  const { path, query } = options.event.context.route;
+  const { path, query } = event.context.route;
 
   // We don't record non-navigation requests
-  if (headers.get("Sec-Fetch-Mode") !== "navigate") {
+  if (event.headers.get("Sec-Fetch-Mode") !== "navigate") {
     return;
   }
 
-  if (isDoNotTrackEnabled(headers) && !options?.collectDnt) {
+  if (isDoNotTrackEnabled(event.headers) && !config.collectDnt) {
     return;
   }
 
@@ -56,10 +51,11 @@ export async function trackPageview(options: TrackPageviewOptions) {
     hostname,
     event: "pageview",
     path,
-    ...parseHeaders(headers, options?.ignoreMetrics),
-    ...(query && !options?.ignoreMetrics?.utm
+    metadata,
+    ...parseHeaders(event.headers, config.ignoreMetrics),
+    ...(query && !config.ignoreMetrics?.utm
       ? parseUtmParameters(query, {
-          strictUtm: options?.strictUtm ?? true,
+          strictUtm: config.strictUtm ?? true,
         })
       : {}),
   };
@@ -68,10 +64,9 @@ export async function trackPageview(options: TrackPageviewOptions) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") &&
-        options &&
-        isEnhancedBotDetectionEnabled(options) && {
-          "X-Forwarded-For": headers.get("X-Forwarded-For")!,
+      ...(event.headers.has("X-Forwarded-For") &&
+        config.enhancedBotDetection && {
+          "X-Forwarded-For": event.headers.get("X-Forwarded-For")!,
         }),
     },
     body: JSON.stringify(payload),

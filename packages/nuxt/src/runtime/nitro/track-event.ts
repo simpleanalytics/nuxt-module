@@ -1,34 +1,30 @@
-import type { AnalyticsEvent, TrackingOptions } from "../server/lib/interfaces";
+import type { AnalyticsEvent } from "../server/lib/interfaces";
 import {
   isProduction,
   isDoNotTrackEnabled,
-  isEnhancedBotDetectionEnabled,
 } from "../server/lib/utils";
 import { parseHeaders } from "../server/lib/headers";
 import { useRuntimeConfig } from "#imports";
-import type { NitroContext } from "./interface";
-
-type TrackEventOptions = TrackingOptions & NitroContext;
+import type { H3Event } from "h3";
 
 export async function trackEvent(
+  event: H3Event,
   eventName: string,
-  options: TrackEventOptions
+  metadata?: Record<string, string | boolean | number | Date>
 ) {
   if (!isProduction()) {
     return;
   }
 
-  const hostname =
-    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
+  const config = useRuntimeConfig().public.simpleAnalytics;
+  const hostname = config.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
     return;
   }
 
-  const { headers } = options.event;
-
-  if (isDoNotTrackEnabled(headers) && !options?.collectDnt) {
+  if (isDoNotTrackEnabled(event.headers) && !config.collectDnt) {
     return;
   }
 
@@ -36,18 +32,17 @@ export async function trackEvent(
     type: "event",
     hostname,
     event: eventName,
-    metadata: options?.metadata,
-    ...parseHeaders(headers, options?.ignoreMetrics),
+    metadata,
+    ...parseHeaders(event.headers, config.ignoreMetrics),
   };
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") &&
-        options &&
-        isEnhancedBotDetectionEnabled(options) && {
-          "X-Forwarded-For": headers.get("X-Forwarded-For")!,
+      ...(event.headers.has("X-Forwarded-For") &&
+        config.enhancedBotDetection && {
+          "X-Forwarded-For": event.headers.get("X-Forwarded-For")!,
         }),
     },
     body: JSON.stringify(payload),

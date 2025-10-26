@@ -1,8 +1,7 @@
-import type { AnalyticsPageview, TrackingOptions } from "./lib/interfaces";
+import type { AnalyticsPageview } from "./lib/interfaces";
 import {
   isProduction,
   isDoNotTrackEnabled,
-  isEnhancedBotDetectionEnabled,
 } from "./lib/utils";
 import { parseHeaders } from "./lib/headers";
 import { parseUtmParameters } from "./lib/utm";
@@ -11,13 +10,13 @@ import { useRequestEvent, useRoute, useRuntimeConfig } from "nuxt/app";
 // eslint-disable-next-line regexp/no-unused-capturing-group
 const PROXY_PATHS = /^\/(proxy\.js|auto-events\.js|simple\/.*)$/;
 
-export async function trackPageview(options?: TrackingOptions) {
+export async function trackPageview(metadata?: Record<string, string | boolean | number | Date>) {
   if (!isProduction()) {
     return;
   }
 
-  const hostname =
-    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
+  const config = useRuntimeConfig().public.simpleAnalytics;
+  const hostname = config.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
@@ -33,14 +32,13 @@ export async function trackPageview(options?: TrackingOptions) {
 
   const { path, query } = useRoute();
   const searchParams = query;
-  const headers = event.headers;
 
   // We don't record non-navigation requests
-  if (headers.get("Sec-Fetch-Mode") !== "navigate") {
+  if (event.headers.get("Sec-Fetch-Mode") !== "navigate") {
     return;
   }
 
-  if (isDoNotTrackEnabled(headers) && !options?.collectDnt) {
+  if (isDoNotTrackEnabled(event.headers) && !config.collectDnt) {
     return;
   }
 
@@ -53,10 +51,11 @@ export async function trackPageview(options?: TrackingOptions) {
     hostname,
     event: "pageview",
     path,
-    ...parseHeaders(headers, options?.ignoreMetrics),
-    ...(searchParams && !options?.ignoreMetrics?.utm
+    metadata,
+    ...parseHeaders(event.headers, config.ignoreMetrics),
+    ...(searchParams && !config.ignoreMetrics?.utm
       ? parseUtmParameters(searchParams, {
-          strictUtm: options?.strictUtm ?? true,
+          strictUtm: config.strictUtm ?? true,
         })
       : {}),
   };
@@ -65,10 +64,9 @@ export async function trackPageview(options?: TrackingOptions) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") &&
-        options &&
-        isEnhancedBotDetectionEnabled(options) && {
-          "X-Forwarded-For": headers.get("X-Forwarded-For")!,
+      ...(event.headers.has("X-Forwarded-For") &&
+      config.enhancedBotDetection && {
+          "X-Forwarded-For": event.headers.get("X-Forwarded-For")!,
         }),
     },
     body: JSON.stringify(payload),

@@ -18,12 +18,13 @@ export default defineNuxtConfig({
   simpleAnalytics: {
     hostname: "your-domain.com",
     enabled: true,
-    proxy: true,
   },
 });
 ```
 
 ## Usage
+
+Adding the module will automatically enable client-side page view collection though the Simple Analytics script.
 
 ### Server-side Pageview Tracking
 
@@ -34,10 +35,7 @@ Track pageviews automatically on the server:
 // This will run on the server and track the pageview
 if (import.meta.server) {
   await trackPageview({
-    hostname: "your-domain.com",
-    metadata: {
-      source: "homepage",
-    },
+    some_extra_metadata: "homepage"
   });
 }
 </script>
@@ -48,14 +46,11 @@ if (import.meta.server) {
 Track custom events from API routes or server-side code:
 
 ```ts
-// In a server API route
+// In a (Nitro) server API route
 export default defineEventHandler(async (event) => {
-  await trackEvent("user_signup", {
-    event,
-    metadata: {
-      source: "registration_form",
-      user_type: "new",
-    },
+  await trackEvent(event, "user_signup", {
+    source: "registration_form",
+    user_type: "new",
   });
 
   return { success: true };
@@ -74,9 +69,6 @@ export default defineNuxtConfig({
 
     // Enable/disable the module
     enabled: true,
-
-    // Enable/disable proxy
-    proxy: true,
 
     // Auto-collect events
     autoCollect: true,
@@ -99,6 +91,9 @@ export default defineNuxtConfig({
       screensize: false,
       viewportsize: false,
       language: false,
+
+      // Use vendor specific timezone headers to the determine the visitors location (server only)
+      timezone: false
     },
 
     // Ignore specific pages
@@ -112,6 +107,9 @@ export default defineNuxtConfig({
 
     // Strict UTM parameter parsing
     strictUtm: true,
+
+    // Enable enhanced bot detection during server tracking (server only)
+    enhancedBotDetection: false
   },
 });
 ```
@@ -131,7 +129,7 @@ Track a pageview on the server.
 
 **Parameters:**
 
-- `options` (object): Additional metadata to track (optional)
+- `metadata` (object): Additional metadata to track (optional)
 
 ### `trackEvent(eventName, options)`
 
@@ -140,40 +138,28 @@ Track a custom event on the server.
 **Parameters:**
 
 - `eventName` (string): Name of the event to track
-- `options` (object): Additional metadata to track (option)
+- `metadata` (object): Additional metadata to track (optional)
 
 ## API Reference (Nitro)
 
-### `trackPageview(requestEvent, options)`
+### `trackPageview(event, options)`
 
 Track a pageview on the server.
 
 **Parameters:**
 
-- `options` (object): Additional metadata to track (optional)
+- `event` (H3Event): Nitro request event
+- `metadata` (object): Additional metadata to track (optional)
 
-### `trackEvent(requestEvent, eventName, options)`
+### `trackEvent(event, eventName, options)`
 
 Track a custom event on the server.
 
 **Parameters:**
 
-- `options` (object):
-  - `hostname` (string): Your Simple Analytics hostname
-  - `metadata` (object): Additional metadata to track
-  - `ignoreMetrics` (object): Metrics to ignore for this pageview
-  - `collectDnt` (boolean): Whether to collect data when DNT is enabled
-  - `strictUtm` (boolean): Whether to use strict UTM parameter parsing
-
-## Migration to v2.0
-
-## Do Not Track (DNT)
-
-### Client-side analytics
-
-### Server-side analytics
-
-## Ignoring metrics To also record DNT visitors you can add data-collect-dnt="true" to the script tag
+- `event` (H3Event): Nitro request event
+- `eventName` (string): Name of the event to track
+- `metadata` (object): Additional metadata to track (optional)
 
 ## License
 
