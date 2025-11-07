@@ -1,32 +1,31 @@
-import type { AnalyticsEvent, TrackingOptions } from "./lib/interfaces";
+import type { AnalyticsEvent } from "./lib/interfaces";
 import {
   isProduction,
   isDoNotTrackEnabled,
-  isEnhancedBotDetectionEnabled,
 } from "./lib/utils";
 import { parseHeaders } from "./lib/headers";
 import { useRequestEvent, useRuntimeConfig } from "nuxt/app";
 
-export async function trackEvent(eventName: string, options?: TrackingOptions) {
+export async function trackEvent(eventName: string, metadata?: Record<string, string | boolean | number | Date>) {
   if (!isProduction()) {
     return;
   }
 
-  const hostname =
-    options?.hostname ?? useRuntimeConfig().public.simpleAnalytics.hostname;
+  const config = useRuntimeConfig().public.simpleAnalytics;
+  const hostname = config.hostname;
 
   if (!hostname) {
     console.warn("No hostname provided for Simple Analytics");
     return;
   }
 
-  const headers = useRequestEvent()?.headers;
+  const event = useRequestEvent();
 
-  if (!headers) {
+  if (!event) {
     return;
   }
 
-  if (isDoNotTrackEnabled(headers) && !options?.collectDnt) {
+  if (isDoNotTrackEnabled(event.headers) && !config.collectDnt) {
     return;
   }
 
@@ -34,19 +33,18 @@ export async function trackEvent(eventName: string, options?: TrackingOptions) {
     type: "event",
     hostname,
     event: eventName,
-    metadata: options?.metadata,
-    ...parseHeaders(headers, options?.ignoreMetrics),
+    metadata,
+    ...parseHeaders(event.headers, config.ignoreMetrics),
   };
 
   const response = await fetch("https://queue.simpleanalyticscdn.com/events", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(headers.has("X-Forwarded-For") &&
-        options &&
-        isEnhancedBotDetectionEnabled(options) && {
-          "X-Forwarded-For": headers.get("X-Forwarded-For")!,
-        }),
+      ...(event.headers.has("X-Forwarded-For") &&
+      config.enhancedBotDetection && {
+        "X-Forwarded-For": event.headers.get("X-Forwarded-For")!,
+      }),
     },
     body: JSON.stringify(payload),
   });

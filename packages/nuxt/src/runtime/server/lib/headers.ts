@@ -1,4 +1,5 @@
-import type { AnalyticsEvent, IgnoredMetrics } from "./interfaces";
+import type { AnalyticsEvent } from "./interfaces";
+import type { IgnoredMetrics } from "../../interfaces";
 
 export function parseViewportWidth(headers: Headers) {
   const width =
@@ -43,12 +44,12 @@ export function parseHeaders(
   ignoredMetrics: IgnoredMetrics = {}
 ) {
   return {
-    ua: !ignoredMetrics.userAgent ? parseUserAgent(headers) : "",
+    ua: !ignoredMetrics.useragent ? parseUserAgent(headers) : "",
 
-    viewport_width: !ignoredMetrics.viewportSize
+    viewport_width: !ignoredMetrics.viewportsize
       ? parseViewportWidth(headers)
       : undefined,
-    viewport_height: !ignoredMetrics.viewportSize
+    viewport_height: !ignoredMetrics.viewportsize
       ? parseViewportHeight(headers)
       : undefined,
 

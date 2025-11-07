@@ -1,6 +1,6 @@
 {
   "name": "@simpleanalytics/nuxt",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Simple Analytics Nuxt",
   "repository": "simpleanalytics/simpleanalytics-nuxt",
   "license": "MIT",
@@ -37,20 +37,21 @@
   },
   "dependencies": {
     "@nuxt/kit": "^4.0.3",
-    "simple-analytics-vue": "^3.0.3"
+    "simple-analytics-vue": "^3.1.0"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^2.6.2",
-    "@nuxt/eslint-config": "^1.8.0",
+    "@nuxt/devtools": "^2.6.3",
+    "@nuxt/eslint-config": "^1.9.0",
     "@nuxt/module-builder": "^1.0.2",
     "@nuxt/schema": "^4.0.3",
     "@nuxt/test-utils": "^3.19.2",
-    "@types/node": "^24.2.1",
+    "@types/node": "^24.3.0",
     "changelogen": "^0.6.2",
-    "eslint": "^9.33.0",
+    "eslint": "^9.34.0",
     "nuxt": "^4",
     "typescript": "~5.9.2",
     "vitest": "^3.2.4",
-    "vue-tsc": "^3.0.5"
+    "vue-tsc": "^3.0.5",
+    "vue": "^3"
   }
 }

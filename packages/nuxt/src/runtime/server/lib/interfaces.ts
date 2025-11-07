@@ -39,24 +39,3 @@ export interface IgnoredMetrics {
   viewportSize?: boolean | undefined;
   language?: boolean | undefined;
 }
-
-export type ServerContext = ServerContextWithRequest | ServerContextWithPath;
-
-export type ServerContextWithRequest = { request: Request };
-
-export type HeaderOnlyContext = { headers: Headers };
-
-export type ServerContextWithPath = {
-  path: string;
-  headers: Headers;
-  searchParams?: Record<string, string | string[] | undefined>;
-};
-
-export interface TrackingOptions {
-  hostname?: string | undefined;
-  enhancedBotDetection?: boolean | undefined;
-  strictUtm?: boolean | undefined;
-  ignoreMetrics?: IgnoredMetrics | undefined;
-  collectDnt?: boolean | undefined;
-  metadata?: AnalyticsMetadata;
-}

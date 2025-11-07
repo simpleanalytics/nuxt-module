@@ -1,5 +1,3 @@
-import type { TrackingOptions } from "./interfaces";
-
 export function isDoNotTrackEnabled(headers: Headers) {
   return headers.has("DNT") && headers.get("DNT") === "1";
 }
@@ -27,8 +25,4 @@ export function isProduction() {
   }
 
   return process.env.VERCEL_ENV === "production";
-}
-
-export function isEnhancedBotDetectionEnabled(options: TrackingOptions) {
-  return options.enhancedBotDetection === true;
 }

@@ -6,7 +6,7 @@ import {
   addServerImports,
   addPlugin,
 } from "@nuxt/kit";
-import type { SimpleAnalyticsOptions } from "./runtime/server/lib/options";
+import type { SimpleAnalyticsOptions } from "./runtime/interfaces";
 
 export interface ModuleOptions extends SimpleAnalyticsOptions {
   enabled?: boolean;
@@ -39,23 +39,25 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin(resolver.resolve("./runtime/plugin"));
 
+    // Server rendering imports
     addImports([
       {
         name: "trackEvent",
-        from: resolver.resolve("./runtime/track-event"),
+        from: resolver.resolve("./runtime/server/track-event"),
         meta: {
           description: "Track a custom event with Simple Analytics",
         },
       },
       {
         name: "trackPageview",
-        from: resolver.resolve("./runtime/track-pageview"),
+        from: resolver.resolve("./runtime/server/track-pageview"),
         meta: {
           description: "Track a pageview with Simple Analytics",
         },
       },
     ]);
 
+    // Nitro imports
     addServerImports([
       {
         name: "trackEvent",

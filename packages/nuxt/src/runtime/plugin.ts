@@ -10,12 +10,26 @@ type SimpleAnalyticsPlugin = Plugin & {
   install(app: App, options?: SimpleAnalyticsOptions): void;
 };
 
+function removeServerOnlyOptions(options: SimpleAnalyticsOptions) {
+  return {
+    ...options,
+    ignoreMetrics: {
+      ...options.ignoreMetrics ?? {},
+      timezone: undefined,
+    },
+    enhancedBotDetection: undefined,
+  };
+}
+
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig();
+
+  // TODO: add proxy support Vue plugin
+  const { enabled, proxy, ...options } = config.public.simpleAnalytics;
 
   // We have to cast the plugin here because the forced .mjs import
   nuxtApp.vueApp.use(SimpleAnalytics as SimpleAnalyticsPlugin, {
     skip: config.public.simpleAnalytics.enabled === false,
-    domain: config.public.simpleAnalytics.domain,
+    ...removeServerOnlyOptions(options),
   });
 });

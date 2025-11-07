@@ -4,9 +4,5 @@ export default defineNuxtRouteMiddleware(async (to) => {
     return;
   }
 
-  if (to.path.startsWith("/api/")) {
-    return;
-  }
-
   await trackPageview();
 });

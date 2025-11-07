@@ -5,10 +5,8 @@ export default defineEventHandler(async (event) => {
     const { eventName, metadata } = await readBody(event);
 
     // Track the custom event using server-side function
-    await trackEvent(eventName, {
-      event,
-      metadata,
-      hostname: "playground.example.com",
+    await trackEvent(event, eventName, {
+      ...metadata,
     });
 
     return {
